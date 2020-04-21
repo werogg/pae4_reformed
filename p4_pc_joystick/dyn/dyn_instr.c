@@ -25,24 +25,24 @@
 int dyn_read_data(uint8_t module_id, uint8_t reg_address, uint8_t reg_address_length, uint8_t *readed_value)
 {
 
-	struct RxReturn response;
+	struct RxReturn response; // Declarem una estructura de l'objecte de resposta RxReturn (Objecte que contindra el packet d'estatus)
 
-	uint8_t bLength = 0x04;
-	uint8_t bInstruction = DYN_INSTR__READ;
-	uint8_t bParameters[2];
-	bParameters[0] = reg_address;
-	bParameters[1] = reg_address_length;
+	uint8_t bLength = 0x04; // Definim la longitud de la instrucció (2 + parametres = 4)
+	uint8_t bInstruction = DYN_INSTR__READ; // Definim el packet com una instrucció de lectura
+	uint8_t bParameters[2]; // Declarem una array de 2 elements pels paràmetres
+	bParameters[0] = reg_address; // Definim el parametre 0 amb la adressa a partir de la qual llegirem
+	bParameters[1] = reg_address_length; // Definim el parametre indicant cuantes adresses volem llegir
 
+	// Definim response amb un object que executara la instrucció i ens donara la resposta
 	response = RxTxPacket(module_id, bLength, bInstruction, bParameters);
 
 	int i;
 	for (i = 0; i < reg_address_length; i++)
 	{
-		readed_value[i] = response.StatusPacket[5 + i];
+		readed_value[i] = response.StatusPacket[5 + i]; // Pasem els valors llegits per parametres
 	}
 
-
-	return (response.tx_err < 1) | response.time_out;
+	return (response.tx_err < 1) | response.time_out; // Retornem el codi d'error
 
 }
 
@@ -54,6 +54,7 @@ int dyn_read_data(uint8_t module_id, uint8_t reg_address, uint8_t reg_address_le
  *
  * @param[in] module_id Id of the dynamixel module
  * @param[in] reg_address Address of the first registry to write
+ * @param[in] parms_length Number of params being passed in params
  * @param[in] params Array of parameters of the write instruction
  * @return Error code to be treated at higher levels
  */
