@@ -61,22 +61,23 @@ int dyn_read_data(uint8_t module_id, uint8_t reg_address, uint8_t reg_address_le
 int dyn_write_data(uint8_t module_id, uint8_t reg_address, int params_length, uint8_t *params)
 {
 
-	uint8_t bParams[params_length+1];
-	struct RxReturn response;
+	uint8_t bParams[params_length+1]; // Declarem una array de params_length + 1 elements pels paràmetres
+	struct RxReturn response; // Declarem una estructura de l'objecte de resposta RxReturn (Objecte que contindra el packet d'estatus)
 
 	uint8_t bLength = params_length+1;
-	uint8_t bInstruction = DYN_INSTR__WRITE;
-	bParams[0] = reg_address;
+	uint8_t bInstruction = DYN_INSTR__WRITE; // Definim el packet com una instrucció d'escriptura
+	bParams[0] = reg_address; // Definim el parametre 0 amb la adressa a partir de la qual llegirem
 
 	int i;
 	for (i = 1; i < params_length + 1; i++)
 	{
-		bParams[i] = params[i-1];
+		bParams[i] = params[i-1]; // Definim el parametre i amb cada valor a escriure apuntat en params
 	}
 
+	// Definim response amb un object que executara la instrucció i ens donara la resposta
 	response = RxTxPacket(module_id, bLength, bInstruction, bParams);
 
-	return (response.tx_err < 1) | response.time_out;
+	return (response.tx_err < 1) | response.time_out; // Retornem el codi d'error
 
 }
 
