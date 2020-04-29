@@ -211,6 +211,18 @@ void* dyn_emu(void *vargp) {
 	// Initialize Sound sensor values for testing purposes
 	dyn_mem[2][35] = 0x24;
 
+	// Initialize motor values
+
+	// Initialize angle limits to test wheel mode
+	dyn_mem[0][6] = 0x24;
+	dyn_mem[0][7] = 0x24;
+	dyn_mem[0][8] = 0x24;
+	dyn_mem[0][9] = 0x24;
+	dyn_mem[1][6] = 0x24;
+	dyn_mem[1][7] = 0x24;
+	dyn_mem[1][8] = 0x24;
+	dyn_mem[1][9] = 0x24;
+
 	// Add SIGTERM handler to kill the current thread
 	signal(SIGTERM, handler);
 

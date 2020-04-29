@@ -50,18 +50,18 @@ int read_moving_speed(uint8_t id, uint16_t* readed_value)
 	return error_code;
 }
 
-int read_move_continue(uint8_t id, bool* is_wheel_mode)
+int read_move_continue(uint8_t id, uint8_t* is_wheel_mode)
 {
 	int error_code, i;
 	uint8_t temp_readed_value[4];
 
-	error_code = dyn_read_data(id, 0x20, 2, temp_readed_value);
+	error_code = dyn_read_data(id, 0x06, 4, temp_readed_value);
 
-	*is_wheel_mode = true;
+	*is_wheel_mode = 1;
 
 	for (i = 0; i < 4; i++)
 	{
-		if (temp_readed_value[i] != 0) *is_wheel_mode = false;
+		if (temp_readed_value[i] != 0) *is_wheel_mode = 0;
 	}
 
 	return error_code;
@@ -101,7 +101,7 @@ int move_continue(uint8_t id)
  */
 int move_wheel(uint8_t id, enum rotation_direction direction, unsigned int speed)
 {
-	uint8_t speed_h, speed_l;
+	uint8_t speed_h;
 	uint8_t params[2];
 
 	if (direction == ROTATE_LEFT) // Rotate left < 1024
@@ -148,6 +148,16 @@ int move_forward(uint8_t id_left_wheel, uint8_t id_right_wheel, unsigned int spe
 int move_backward(uint8_t id_left_wheel, uint8_t id_right_wheel, unsigned int speed)
 {
 	return move_wheel(id_left_wheel, ROTATE_RIGHT, speed) | move_wheel(id_right_wheel, ROTATE_LEFT, speed);
+}
+
+int move_left(uint8_t id_left_wheel, uint8_t id_right_wheel, unsigned int speed)
+{
+	return move_wheel(id_left_wheel, ROTATE_RIGHT, 0) | move_wheel(id_right_wheel, ROTATE_RIGHT, speed);
+}
+
+int move_right(uint8_t id_left_wheel, uint8_t id_right_wheel, unsigned int speed)
+{
+	return move_wheel(id_left_wheel, ROTATE_LEFT, speed) | move_wheel(id_right_wheel, ROTATE_LEFT, 0);
 }
 
 /**
