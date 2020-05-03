@@ -50,6 +50,16 @@ int read_moving_speed(uint8_t id, uint16_t* readed_value)
 	return error_code;
 }
 
+/**
+ * Check if a module is in wheel mode
+ *
+ * Reads the value of all the limit angles and if all of them are
+ * zero
+ *
+ * @param[in] id Device ID
+ * @param[out] pointer where the boolean value will be stored
+ * @return Error code to be treated at higher levels
+ */
 int read_move_continue(uint8_t id, uint8_t* is_wheel_mode)
 {
 	int error_code, i;
@@ -150,11 +160,32 @@ int move_backward(uint8_t id_left_wheel, uint8_t id_right_wheel, unsigned int sp
 	return move_wheel(id_left_wheel, ROTATE_RIGHT, speed) | move_wheel(id_right_wheel, ROTATE_LEFT, speed);
 }
 
+
+/**
+ * Go left with 2 modules
+ *
+ * Makes left wheel to stop and right wheel to rotate in a specified speed to
+ * make a left rotation.
+ *
+ * @param[in] id_left_wheel Device ID
+ * @param[in] id_right_wheel Device ID
+ * @param[in] speed Angular speed  value from 0 to 1024 at which the modules will rotate at
+ */
 int move_left(uint8_t id_left_wheel, uint8_t id_right_wheel, unsigned int speed)
 {
 	return move_wheel(id_left_wheel, ROTATE_RIGHT, 0) | move_wheel(id_right_wheel, ROTATE_RIGHT, speed);
 }
 
+/**
+ * Go right with 2 modules
+ *
+ * Makes right wheel to stop and left wheel to rotate in a specified speed to
+ * make a right rotation.
+ *
+ * @param[in] id_left_wheel Device ID
+ * @param[in] id_right_wheel Device ID
+ * @param[in] speed Angular speed  value from 0 to 1024 at which the modules will rotate at
+ */
 int move_right(uint8_t id_left_wheel, uint8_t id_right_wheel, unsigned int speed)
 {
 	return move_wheel(id_left_wheel, ROTATE_LEFT, speed) | move_wheel(id_right_wheel, ROTATE_LEFT, 0);
