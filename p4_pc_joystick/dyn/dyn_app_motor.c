@@ -22,13 +22,13 @@
  */
 int write_moving_speed(uint8_t id, uint16_t speed)
 {
-	uint8_t first_byte = (uint8_t) (speed & 0xff);
-	uint8_t second_byte = (uint8_t) (speed >> 8);
+	uint8_t first_byte = (uint8_t) (speed & 0xff); // Extract first byte from 16bit
+	uint8_t second_byte = (uint8_t) (speed >> 8); // Extract second byte from 16bit
 	uint8_t params[2];
 	params[0] = first_byte;
 	params[1] = second_byte;
 
-	return dyn_write_data(id, 0x20, 2, params);
+	return dyn_write_data(id, 0x20, 2, params); // Write those bytes in the registry
 }
 
 /**
@@ -43,7 +43,7 @@ int write_moving_speed(uint8_t id, uint16_t speed)
 int read_moving_speed(uint8_t id, uint16_t* readed_value)
 {
 	uint8_t temp_readed_value[2];
-	int error_code = dyn_read_data(id, 0x20, 2, temp_readed_value);
+	int error_code = dyn_read_data(id, 0x20, 2, temp_readed_value); // Read registry 0x20 and store it on temp_readed_value
 
 	*readed_value = temp_readed_value[1] << 8 | temp_readed_value[0];
 
@@ -65,13 +65,13 @@ int read_move_continue(uint8_t id, uint8_t* is_wheel_mode)
 	int error_code, i;
 	uint8_t temp_readed_value[4];
 
-	error_code = dyn_read_data(id, 0x06, 4, temp_readed_value);
+	error_code = dyn_read_data(id, 0x06, 4, temp_readed_value); // Read 4 bytes from address 0x06
 
 	*is_wheel_mode = 1;
 
 	for (i = 0; i < 4; i++)
 	{
-		if (temp_readed_value[i] != 0) *is_wheel_mode = 0;
+		if (temp_readed_value[i] != 0) *is_wheel_mode = 0; // Check if all limit angles are set to 0
 	}
 
 	return error_code;
@@ -94,7 +94,7 @@ int move_continue(uint8_t id)
 	params[2] = 0;
 	params[3] = 0;
 
-	return dyn_write_data(id, 0x06, 4, params);
+	return dyn_write_data(id, 0x06, 4, params); // Write 0 in 4 addresses from 0x06
 }
 
 /**
